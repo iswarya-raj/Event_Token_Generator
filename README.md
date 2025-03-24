@@ -52,10 +52,3 @@ The **Event Token Generator System** is a secure authentication mechanism design
 
 ## 🤝 Contributing
 Contributions are welcome! Feel free to submit issues or pull requests.
-
-## 📩 Contact
-For any queries, reach out to [Your Email] or open an issue on GitHub.
-
----
-🔗 **GitHub Repository:** [GitHub Link](https://github.com/your-username/event-token-generator)
-

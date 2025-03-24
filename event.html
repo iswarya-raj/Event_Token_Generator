@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graduation Registration Form</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        .main {
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #4a90e2;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            margin-bottom: 15px;
+        }
+        input[type="text"]:focus, select:focus, input[type="number"]:focus, textarea:focus {
+            border-color: #4a90e2;
+        }
+        select {
+            appearance: none;
+            background-color: #f9f9f9;
+            color: #333;
+            cursor: pointer;
+        }
+        input[type="text"]::placeholder, input[type="number"]::placeholder, textarea::placeholder {
+            color: #999;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            margin: 20px auto;
+            cursor: pointer;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #paymentMessage {
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+        }
+        #paymentDetailsSection label, #paymentDetailsSection input, #paymentDetailsSection textarea {
+            margin-bottom: 15px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .main {
+                padding: 20px; 
+            }
+            h1 {
+                font-size: 20px; 
+            }
+            label, #paymentMessage {
+                font-size: 13px; 
+            }
+            input[type="text"], input[type="number"], select, textarea {
+                padding: 8px; 
+                font-size: 13px; 
+            }
+            button {
+                padding: 10px;
+                font-size: 14px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Graduation Day Registration Form</h1>
+        <label for="name">NAME:</label>
+        <input type="text" id="name" placeholder="Enter your name">
+
+        <label for="email">EMAIL:</label>
+        <input type="text" id="email" placeholder="Enter your Mail ID">
+
+        <label for="reg">REGISTER NUMBER:</label>
+        <input type="text" id="reg" placeholder="Enter your register number">
+
+        <label for="roll">ROLL NUMBER:</label>
+        <input type="text" id="roll" placeholder="Enter your roll number">
+
+        <label for="branch">BRANCH:</label>
+        <select id="branch">
+            <option value="IT">Information Technology</option>
+            <option value="cse">Computer Science and Engineering</option>
+        </select>
+
+        <label for="section">SECTION:</label>
+        <select id="section">
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+            <option value="c">D</option>
+        </select>
+
+        <label for="noofper">NUMBER OF PERSONS ACCOMPANYING FOR LUNCH (INCLUDING YOU):</label>
+        <input type="number" id="noofper" placeholder="Enter the number of people" oninput="calculateAmount()">
+        <label>Note: Rs.250 per head for people more than 3</label><br>
+        <span id="paymentMessage"></span>
+
+        <div id="paypal-button-container"></div>
+
+        <button id="submit" type="submit" disabled>Submit</button>
+    </div>
+    <script src="https://www.paypal.com/sdk/js?client-id=Aa5OW0uQvpFgwmvUABwHv-uXSII-icM9n_Tz0wk6XzU3wXlbg3qtS0GEwzp_8XzGKAm-YKvC__Mg4tWl"></script>
+
+    <script>
+        function calculateAmount() {
+            var noOfPersons = document.getElementById('noofper').value;
+            if (noOfPersons > 3) {
+                var amount = (noOfPersons - 3) * 250;
+                document.getElementById('paymentMessage').innerHTML = `Amount to be paid: Rs. ${amount}. Please proceed with payment below.`;
+                renderPayPalButton(amount);
+            } else {
+                document.getElementById('paymentMessage').innerHTML = `No amount to be paid`;
+                document.getElementById('paypal-button-container').innerHTML = '';
+                document.getElementById('submit').disabled = false;
+            }
+        }
+
+        function renderPayPalButton(amount) {
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: { value: amount.toString() } 
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        document.getElementById('submit').disabled = false;
+                    });
+                },
+                onError: function(err) {
+                    console.error('Payment error:', err);
+                }
+            }).render('#paypal-button-container');
+        }
+    </script>
+</body>
+</html>
